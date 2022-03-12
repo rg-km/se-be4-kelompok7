@@ -29,6 +29,7 @@ let snake = {
     position: initPosition(),
     direction: initDirection(),
     score: 0,
+    life: 3,
 }
 let apple1 = {
     position: initPosition(),
@@ -37,10 +38,34 @@ let apple2 = {
     position: initPosition(),
 }
 
+let life = {
+    color: "green",
+    position: initPosition(),
+    id: "lifeBoard",
+}
+
+function isPrime(number) {
+    let divider = 0;
+
+    for (let i = 1; i <= number; i++) {
+        if (number % i == 0) {
+            divider++
+        }
+    }
+
+    return (divider == 2) ? true : false
+}
+
 function drawApple(ctx, apple) {
     base_image = new Image();
     base_image.src = 'assets/apple.png';
     ctx.drawImage(base_image, apple.position.x * CELL_SIZE, apple.position.y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+}
+
+function drawLife(ctx, obj) {
+    ctx.fillStyle = obj.color;
+
+    ctx.fillRect(obj.position.x * CELL_SIZE, obj.position.y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
 }
 
 function drawSnake(ctx, snake) {
@@ -75,6 +100,16 @@ function drawScore(snake) {
     scoreCtx.fillText(snake.score, 10, scoreCanvas.scrollHeight / 2);
 }
 
+function drawLifeCount(life) {
+    let canvas = document.getElementById(life.id);
+    let ctx = canvas.getContext("2d");
+
+    ctx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+    ctx.font = "30px Arial";
+    ctx.fillStyle = life.color
+    ctx.fillText("Life: " + snake.life, 10, canvas.scrollHeight / 2);
+}
+
 function draw() {
     setInterval(function () {
         let snakeCanvas = document.getElementById("snakeBoard");
@@ -87,7 +122,12 @@ function draw() {
         drawApple(ctx, apple1)
         drawApple(ctx, apple2)
 
+        if (isPrime(snake.score)) {
+            drawLife(ctx, life);
+        }
+
         drawScore(snake);
+        drawLifeCount(life);
     }, REDRAW_INTERVAL);
 }
 
@@ -114,6 +154,11 @@ function eat(snake, apple1, apple2) {
     if (snake.position.x == apple2.position.x && snake.position.y == apple2.position.y) {
         apple2.position = initPosition();
         snake.score++;
+    }
+
+    if (snake.position.x == life.position.x && snake.position.y == life.position.y && isPrime(snake.score)) {
+        life.position = initPosition();
+        snake.life++;
     }
 }
 
