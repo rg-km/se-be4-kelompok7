@@ -1,0 +1,6 @@
+@font-face { font-family: monogram; src: url('../assets/monogram/ttf/monogram.ttf'); } 
+
+.font{
+    font-family: 'monogram';
+    font-style: normal;
+}
