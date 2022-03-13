@@ -50,6 +50,10 @@ let apple1 = {
     position: initPosition(),
 }
 
+let apple2 = {
+    position: initPosition(),
+}
+
 let life = {
     color: "green",
     position: initPosition(),
@@ -130,6 +134,7 @@ function draw() {
 
         drawSnake(ctx, snake1)
         drawApple(ctx, apple1)
+        drawApple(ctx, apple2);
 
         if (isPrime(snake1.score)) {
             drawLife(ctx, life);
@@ -155,9 +160,18 @@ function teleport(snake) {
     }
 }
 
-function eat(snake, apple1) {
+function eat(snake, apple1, apple2) {
     if (snake.head.x == apple1.position.x && snake.head.y == apple1.position.y) {
         apple1.position = initPosition();
+        snake.score++;
+        snake.body.push({
+            x: snake.head.x,
+            y: snake.head.y,
+        });
+    }
+
+    if (snake.head.x == apple2.position.x && snake.head.y == apple2.position.y) {
+        apple2.position = initPosition();
         snake.score++;
         snake.body.push({
             x: snake.head.x,
@@ -196,7 +210,7 @@ function move(snake) {
     }
 
     teleport(snake);
-    eat(snake, apple1);
+    eat(snake, apple1, apple2);
     moveBody(snake);
 
     setTimeout(function () {
