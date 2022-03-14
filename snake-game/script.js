@@ -11,7 +11,7 @@ const DIRECTION = {
 }
 
 var MOVE_INTERVAL = 150;
-var audio = new Audio('assets/sound effect/game_over.wav');
+
 
 //array wall
 var wallX = [];
@@ -353,9 +353,12 @@ function eat(snake, apple, apple1) {
             }
             snake.level++;
             MOVE_INTERVAL -= 20;
-            alert("Level Up" + snake.level);
+            document.getElementById("levelUp").innerHTML = "LEVEL UP";
             var msk = document.getElementById("lvlUp");
             msk.play();
+            setTimeout(function (){
+                document.getElementById("levelUp").innerHTML = "";
+            }, 3000)
         }
         snake.scoreReset = 0;
     }
@@ -446,12 +449,16 @@ function checkCollision(snakes) {
 
     //if collide and life 0 exec code game over
     if (isCollide) {
+        var audio = document.getElementById("gameOverSound");
+        document.getElementById("gameOver").innerHTML = "GAME OVER";
         audio.play();
-        alert("Game over");
         MOVE_INTERVAL = 150;
         wallX = [];
         wallY = [];
         snake1 = initSnake("#B96E54");
+        setTimeout(function (){
+            document.getElementById("gameOver").innerHTML = "";
+        }, 3000)
     }
     return isCollide;
 }
