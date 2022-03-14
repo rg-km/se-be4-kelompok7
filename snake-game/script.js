@@ -84,32 +84,12 @@ function initSnake(color) {
         score: 0,
         scoreReset: 0,
         level: 0,
-        lifes: 0,
+        life: 3,
     }
 }
 
-// sum for value x
-var sum = 0;
-
-//life snake display corner
-var life = [
-    {
-        x: sum,
-        y: 0
-    },
-    {
-        x: sum + 20,
-        y: 0
-    },
-    {
-        x: sum + 40,
-        y: 0
-    },
-];
-
 //life snake display canvas
 let lifes = {
-    color: "green",
     position: initPosition(),
 }
 
@@ -144,6 +124,15 @@ function drawScore(snake) {
     scoreCtx.font = "50px monogram";
     scoreCtx.fillStyle = "#A2C758";
     scoreCtx.fillText(snake.score, 10, scoreCanvas.scrollHeight / 2);
+}
+
+function drawLifeCorner(ctx, snake){
+    let imgLife = document.getElementById("life");
+    var lifePositionX = 0;
+    for (let i = 1; i <= snake.life; i++) {
+        ctx.drawImage(imgLife, lifePositionX * CELL_SIZE, 0 * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+        lifePositionX = lifePositionX + 1;
+    }  
 }
 
 //function isPrime use for prime number
@@ -261,6 +250,9 @@ function draw() {
         //drawSnake
         drawSnake(ctx, snake1)
 
+        //drawLife Corner
+        drawLifeCorner(ctx, snake1);
+
         //drawApple 1
         let img = document.getElementById("apple");
         ctx.drawImage(
@@ -280,9 +272,9 @@ function draw() {
         );
 
         //draw health on prime number
-        if (isPrime(snake1.score)) {
-            drawLife(ctx, lifes);
-        }
+          if (isPrime(snake1.score)) {
+              drawLife(ctx, lifes);
+          }
 
         //call funtion createWall
         createWall();
@@ -298,17 +290,6 @@ function draw() {
         //display speed
         document.getElementById("speed").innerHTML = "Speed " + MOVE_INTERVAL + " ms";
 
-        //draw health on corner
-        for(var i = 0; i < life.length; i++){
-            let img1 = document.getElementById("life");
-            ctx.drawImage(
-                img1,
-                life[i].x,
-                life[i].y,
-                CELL_SIZE,
-                CELL_SIZE
-            );   
-        }
     }, REDRAW_INTERVAL);
 }
 
@@ -351,16 +332,9 @@ function eat(snake, apple, apple1) {
     //eat health and push to array
     if (snake.head.x == lifes.position.x && snake.head.y == lifes.position.y && isPrime(snake.score)) {
         lifes.position = initPosition();
-        snake.lifes++;
+        snake.life++;
         var msk = document.getElementById("getHealth");
         msk.play();
-        for(var j = 0; j < snake.lifes; j++){
-            if(snake.lifes === 1){
-                life.push({x: sum + 60, y: 0});
-                sum += 20;
-            }
-        } 
-        snake.lifes = 0;
     }
 
     //snake level
@@ -391,28 +365,28 @@ function eat(snake, apple, apple1) {
 function moveLeft(snake) {
     snake.head.x--;
     teleport(snake);
-    eat(snake, apple, apple1);
+    eat(snake, apple, apple1, lifes);
 }
 
 //function for snake move right
 function moveRight(snake) {
     snake.head.x++;
     teleport(snake);
-    eat(snake, apple, apple1);
+    eat(snake, apple, apple1, lifes);
 }
 
 //function for snake move down
 function moveDown(snake) {
     snake.head.y++;
     teleport(snake);
-    eat(snake, apple, apple1);
+    eat(snake, apple, apple1, lifes);
 }
 
 //function for snake move up
 function moveUp(snake) {
     snake.head.y--;
     teleport(snake);
-    eat(snake, apple, apple1);
+    eat(snake, apple, apple1, lifes);
 }
 
 //function for check collision snake
@@ -422,12 +396,10 @@ function checkCollision(snakes) {
         for (let j = 0; j < snakes.length; j++) {
             for (let k = 1; k < snakes[j].body.length; k++) {
                 if (snakes[i].head.x == snakes[j].body[k].x && snakes[i].head.y == snakes[j].body[k].y) {
-                    life.length--;
-                    sum -= 20;
-                    if(life.length == 0){
+                    snake1.life--;
+                    if(snake1.life == 0){
                         isCollide = true;
                     }
-                    
                 }
             }
         }
@@ -437,18 +409,16 @@ function checkCollision(snakes) {
     for (let i = 0; i < wallX.length; i++) {
         if (snake1.head.x === wallX[i] && (snake1.direction == 2 || snake1.direction == 3)) {
             if (snake1.head.y === wallY[i] || snake1.head.y === wallY[i]) {
-                life.length--;
-                sum -= 20;
-                if(life.length == 0){
+                snake1.life--;
+                if(snake1.life == 0){
                     isCollide = true;
                 }
             }
         }
         if (snake1.head.y === wallY[i] && (snake1.direction == 0 || snake1.direction == 1)) {
             if (snake1.head.x === wallX[i] || snake1.head.x === wallX[i]) {
-                life.length--;
-                sum -= 20;
-                if(life.length == 0){
+                snake1.life--;
+                if(snake1.life == 0){
                     isCollide = true;
                 }
             }
@@ -476,26 +446,12 @@ function checkCollision(snakes) {
 
     //if collide and life 0 exec code game over
     if (isCollide) {
-            audio.play();
-            alert("Game over");
-            // life = [
-            //   {
-            //       x: sum,
-            //       y: 0
-            //   },
-            //   {
-            //       x: sum + 20,
-            //       y: 0
-            //   },
-            //   {
-            //       x: sum + 40,
-            //       y: 0
-            //   },
-            // ];
-            location.reload();
-            MOVE_INTERVAL = 150;
-            snake1 = initSnake("purple");
-        
+        audio.play();
+        alert("Game over");
+        MOVE_INTERVAL = 150;
+        wallX = [];
+        wallY = [];
+        snake1 = initSnake("#B96E54");
     }
     return isCollide;
 }
@@ -525,7 +481,6 @@ function move(snake) {
     } else {
         initGame();
     }
-    console.log(life.length);
 }
 
 //function moveBody use for the body following the head
