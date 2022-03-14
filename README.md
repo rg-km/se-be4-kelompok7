@@ -21,5 +21,5 @@ Made to complete the Software Engineering final project in Ruangguru CAMP, devel
   - Development Team (Designer)
 - BE2116362 - [Muhammad Agung Sadarullah (uragiristereo)](https://github.com/uragiristereo)
   - Development Team (Engineer)
-- BE2116362 - [Muhammad Wahyu Agustino (wahyuagustino)](https://github.com/wahyuagustino)
+- BE2241636 - [Muhammad Wahyu Agustino (wahyuagustino)](https://github.com/wahyuagustino)
   - Development Team (Engineer)
