@@ -123,7 +123,7 @@ function drawScore(snake) {
     scoreCtx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
     scoreCtx.font = "50px monogram";
     scoreCtx.fillStyle = "#A2C758";
-    scoreCtx.fillText(snake.score, 10, scoreCanvas.scrollHeight / 2);
+    scoreCtx.fillText(snake.score, 10000, scoreCanvas.scrollHeight / 2);
 }
 
 function drawLifeCorner(ctx, snake){
